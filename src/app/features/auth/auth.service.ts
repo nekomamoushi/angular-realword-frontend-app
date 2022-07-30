@@ -9,6 +9,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  register(username: string, email: string, password: string) {
+    return this.http.post(`${this.baseUrl}`, {
+      user: {
+        username,
+        email,
+        password,
+      },
+    });
+  }
+
   login(email: string, password: string) {
     return this.http.post(`${this.baseUrl}/login`, {
       user: {
