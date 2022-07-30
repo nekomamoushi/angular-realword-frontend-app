@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Errors } from 'src/app/core/models/errors';
 import { AuthService } from '../../auth.service';
 
@@ -12,7 +13,11 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   errorList: Errors | null = null;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -27,7 +32,7 @@ export class RegisterComponent implements OnInit {
 
     this.auth.register(username, email, password).subscribe({
       next: (response) => {
-        console.log(response);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         console.error(err);
