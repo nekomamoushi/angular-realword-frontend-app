@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AuthService } from './auth.service';
+import { LoginComponent } from './components/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [],
-  imports: [CommonModule, SharedModule, AuthRoutingModule],
+  declarations: [LoginComponent],
+  imports: [CommonModule, SharedModule, ReactiveFormsModule, AuthRoutingModule],
 })
 export class AuthModule {
   public static forRoot() {
