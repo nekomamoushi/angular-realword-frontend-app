@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Errors } from 'src/app/core/models/errors';
 import { User } from 'src/app/core/models/user';
 import { UserService } from 'src/app/core/services/user.service';
+import { AuthService } from 'src/app/features/auth/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,7 +24,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: NonNullableFormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -43,5 +45,10 @@ export class SettingsComponent implements OnInit {
         this.router.navigate(['/']);
       },
     });
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }
