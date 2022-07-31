@@ -1,3 +1,18 @@
 <div class="home-page">
   <app-banner></app-banner>
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-9"></div>
+      <div class="col-md-3">
+        <div class="sidebar">
+          <p>Popular Tags</p>
+          <div class="tag-list">
+            <a *ngFor="let tag of allTags" class="tag-pill tag-default">
+              {{ tag }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

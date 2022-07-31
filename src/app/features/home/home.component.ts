@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Tag } from 'src/app/core/models/tag';
+import { TagService } from 'src/app/core/services/tag.service';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  allTags: Tag[] | null = null;
 
-  ngOnInit(): void {}
+  constructor(private tag: TagService) {}
+
+  ngOnInit(): void {
+    this.tag.getAllTags().subscribe((tags: Tag[]) => {
+      this.allTags = tags;
+    });
+  }
 }
