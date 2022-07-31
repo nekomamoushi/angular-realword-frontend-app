@@ -9,6 +9,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/home/home.module').then((m) => m.HomeModule),
   },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./features/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+  },
 ];
 
 @NgModule({
