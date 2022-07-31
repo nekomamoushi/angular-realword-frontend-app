@@ -3,16 +3,28 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
-          <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-          <h4>Eric Simons</h4>
-          <p>
-            Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-            looks like Peeta from the Hunger Games
-          </p>
-          <button class="btn btn-sm btn-outline-secondary action-btn">
-            <i class="ion-plus-round"></i>
-            &nbsp; Follow Eric Simons
-          </button>
+          <ng-container *ngIf="currentProfile">
+            <img src="" class="user-img" />
+            <h4>{{ currentProfile.username }}</h4>
+            <p>{{ currentProfile.bio }}</p>
+            <button
+              [hidden]="isUserConnected$ | async"
+              class="btn btn-sm btn-outline-secondary action-btn"
+            >
+              <i *ngIf="!currentProfile.following" class="ion-plus-round"></i>
+              <i *ngIf="currentProfile.following" class="ion-minus-round"></i>
+              &nbsp;
+              {{ currentProfile.following ? "Unfollow" : "Follow" }}
+              {{ currentProfile.username }}
+            </button>
+            <a
+              [routerLink]="['/settings']"
+              [hidden]="!(isUserConnected$ | async)"
+              class="btn btn-sm btn-outline-secondary action-btn"
+            >
+              <i class="ion-gear-a"></i> Edit Profile Settings
+            </a>
+          </ng-container>
         </div>
       </div>
     </div>
