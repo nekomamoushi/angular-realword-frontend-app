@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { AuthService } from 'src/app/features/auth/auth.service';
+import { User } from '../models/user';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,9 +10,14 @@ import { AuthService } from 'src/app/features/auth/auth.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  isLoggedIn$ = this.auth.isLoggedIn$.pipe(tap(console.log));
+  isLoggedIn$ = this.auth.isLoggedIn$;
+  currentUser: User | null = null;
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private user: UserService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.user.getUser().subscribe((userData) => {
+      this.currentUser = userData;
+    });
+  }
 }

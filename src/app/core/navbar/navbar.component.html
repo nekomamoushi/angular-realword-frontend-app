@@ -16,6 +16,11 @@
           <i class="ion-gear-a"></i>&nbsp;Settings
         </a>
       </li>
+      <li *ngIf="isLoggedIn$ | async" class="nav-item">
+        <a class="nav-link" [routerLink]="['/profile', currentUser?.username]">
+          <i class="ion-gear-a"></i>&nbsp;Profile
+        </a>
+      </li>
       <li *ngIf="!(isLoggedIn$ | async)" class="nav-item">
         <a class="nav-link" routerLink="/login">Sign in</a>
       </li>
