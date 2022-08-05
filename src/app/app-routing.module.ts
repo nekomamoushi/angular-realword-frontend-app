@@ -9,6 +9,11 @@ const routes: Routes = [
       import('./features/home/home.module').then((m) => m.HomeModule),
   },
   {
+    path: 'editor',
+    loadChildren: () =>
+      import('./features/article/article.module').then((m) => m.ArticleModule),
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./features/settings/settings.module').then(
