@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'editor',
     loadChildren: () =>
-      import('./features/article/article.module').then((m) => m.ArticleModule),
+      import('./features/editor/editor.module').then((m) => m.EditorModule),
     canActivate: [AuthGuard],
   },
   {
