@@ -12,10 +12,10 @@ import { ArticleService } from 'src/app/core/services/article.service';
 
 @Component({
   selector: 'app-article',
-  templateUrl: './article.component.html',
-  styleUrls: ['./article.component.scss'],
+  templateUrl: './editor.component.html',
+  styleUrls: ['./editor.component.scss'],
 })
-export class ArticleComponent implements OnInit {
+export class EditorComponent implements OnInit {
   slug: string | null = null;
   article: Article | null = null;
   editorForm = this.fb.group({
