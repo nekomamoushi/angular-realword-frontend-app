@@ -46,7 +46,11 @@ export class ArticleComponent implements OnInit {
         })
       )
       .subscribe((comments: Comment[]) => {
-        this.comments = comments;
+        this.comments = comments.sort((a, b) => {
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
       });
   }
 
@@ -68,6 +72,16 @@ export class ArticleComponent implements OnInit {
       });
   }
 
+  onDeleteComment(id: number) {
+    this.commentService
+      .deleteComment(this.article?.slug as string, id)
+      .subscribe({
+        next: () => {
+          this.updateComments(id);
+        },
+      });
+  }
+
   onMayBeFollow() {
     if (!this.article) {
       return;
@@ -82,7 +96,7 @@ export class ArticleComponent implements OnInit {
     followOrNot$.subscribe({
       next: (profile: Profile) => {
         console.log(profile);
-        this.updateArticleProfile(this.article as Article, profile);
+        this.updateArticleProfile(profile);
       },
       error: (err) => {
         console.error(err);
@@ -116,7 +130,17 @@ export class ArticleComponent implements OnInit {
     this.article = article;
   }
 
-  private updateArticleProfile(article: Article, profile: Profile) {
-    article.author = profile;
+  private updateArticleProfile(profile: Profile) {
+    if (!this.article) {
+      return;
+    }
+    this.article.author = profile;
+  }
+
+  private updateComments(id: number) {
+    if (!this.comments) {
+      return;
+    }
+    this.comments = this.comments.filter((comment) => comment.id !== id);
   }
 }

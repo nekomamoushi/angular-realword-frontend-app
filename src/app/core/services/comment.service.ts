@@ -19,4 +19,10 @@ export class CommentService {
         })
       );
   }
+
+  deleteComment(slug: string, id: number) {
+    return this.http.delete(
+      `${environment.apiUrl}/articles/${slug}/comments/${id}`
+    );
+  }
 }
