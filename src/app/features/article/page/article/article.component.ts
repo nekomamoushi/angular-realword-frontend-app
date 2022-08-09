@@ -1,10 +1,12 @@
 import { isIdentifier } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { delay, iif, map, Observable } from 'rxjs';
+import { delay, iif, map, Observable, switchMap, tap } from 'rxjs';
 import { Article } from 'src/app/core/models/article';
+import { Comment } from 'src/app/core/models/comment';
 import { Profile } from 'src/app/core/models/profile';
 import { ArticleService } from 'src/app/core/services/article.service';
+import { CommentService } from 'src/app/core/services/comment.service';
 import { ProfileService } from 'src/app/core/services/profile.service';
 import { AuthService } from 'src/app/features/auth/auth.service';
 
@@ -15,6 +17,7 @@ import { AuthService } from 'src/app/features/auth/auth.service';
 })
 export class ArticleComponent implements OnInit {
   article: Article | null = null;
+  comments: Comment[] | null = null;
   isAuthenticated$ = this.authService.isLoggedIn$;
   isAuthorized$!: Observable<boolean>;
 
@@ -23,18 +26,28 @@ export class ArticleComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private articleService: ArticleService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private commentService: CommentService
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-      this.article = data.article;
-      this.isAuthorized$ = this.authService.currentUser$.pipe(
-        map((currentUser) => {
-          return currentUser?.username === this.article?.author.username;
+    this.route.data
+      .pipe(
+        tap((data: any) => {
+          this.article = data.article;
+          this.isAuthorized$ = this.authService.currentUser$.pipe(
+            map((currentUser) => {
+              return currentUser?.username === this.article?.author.username;
+            })
+          );
+        }),
+        switchMap(() => {
+          return this.commentService.getComments(this.article?.slug as string);
         })
-      );
-    });
+      )
+      .subscribe((comments: Comment[]) => {
+        this.comments = comments;
+      });
   }
 
   onEditArticle() {
@@ -102,6 +115,7 @@ export class ArticleComponent implements OnInit {
   private updateArticle(article: Article) {
     this.article = article;
   }
+
   private updateArticleProfile(article: Article, profile: Profile) {
     article.author = profile;
   }

@@ -72,5 +72,37 @@
     </div>
 
     <hr />
+
+    <div class="row">
+      <div class="col-xs-12 col-md-8 offset-md-2">
+        <div *ngIf="!(isAuthenticated$ | async)" class="centered">
+          <a [routerLink]="['/login']">Sign in</a> or
+          <a [routerLink]="['/register']">sign up</a>
+          to add comments on this article.
+        </div>
+        <div *ngFor="let comment of comments" class="card">
+          <div class="card-block">
+            <p class="card-text">
+              {{ comment.body }}
+            </p>
+          </div>
+          <div class="card-footer">
+            <a
+              [routerLink]="['/profile', comment.author.username]"
+              class="comment-author"
+            >
+              <img [src]="" class="comment-author-img" />
+            </a>
+            &nbsp;
+            <a
+              [routerLink]="['/profile', comment.author.username]"
+              class="comment-author"
+              >{{ comment.author.username }}</a
+            >
+            <span class="date-posted">{{ comment.createdAt | date }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
