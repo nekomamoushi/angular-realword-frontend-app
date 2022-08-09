@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   Article,
@@ -50,6 +50,38 @@ export class ArticleService {
       .put<ArticleResponse>(`${environment.apiUrl}/articles/${slug}`, {
         article,
       })
+      .pipe(
+        map((response) => {
+          return response.article;
+        })
+      );
+  }
+
+  deleteArticle(slug: string): Observable<undefined> {
+    return this.http
+      .delete(`${environment.apiUrl}/articles/${slug}`)
+      .pipe(tap(console.log));
+  }
+
+  favoriteArticle(slug: string): Observable<Article> {
+    return this.http
+      .post<ArticleResponse>(
+        `${environment.apiUrl}/articles/${slug}/favorite`,
+        {}
+      )
+      .pipe(
+        map((response) => {
+          return response.article;
+        })
+      );
+  }
+
+  unfavoriteArticle(slug: string): Observable<Article> {
+    return this.http
+      .delete<ArticleResponse>(
+        `${environment.apiUrl}/articles/${slug}/favorite`,
+        {}
+      )
       .pipe(
         map((response) => {
           return response.article;

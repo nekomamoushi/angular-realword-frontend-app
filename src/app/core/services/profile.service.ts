@@ -19,4 +19,29 @@ export class ProfileService {
         })
       );
   }
+
+  followUser(username: string) {
+    return this.http
+      .post<ProfileResponse>(
+        `${environment.apiUrl}/profiles/${username}/follow`,
+        {}
+      )
+      .pipe(
+        map((response: ProfileResponse) => {
+          return response.profile;
+        })
+      );
+  }
+
+  unfollowUser(username: string) {
+    return this.http
+      .delete<ProfileResponse>(
+        `${environment.apiUrl}/profiles/${username}/follow`
+      )
+      .pipe(
+        map((response: ProfileResponse) => {
+          return response.profile;
+        })
+      );
+  }
 }

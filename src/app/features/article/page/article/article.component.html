@@ -1,7 +1,76 @@
 <div class="article-page">
   <div class="banner">
     <div class="container">
-      <h1>Article Title</h1>
+      <h1>{{ article?.title }}</h1>
+
+      <div class="article-meta">
+        <a><img [src]="" /></a>
+        <div class="info">
+          <a
+            [routerLink]="['/profile', article?.author?.username]"
+            class="author"
+            >{{ article?.author?.username }}</a
+          >
+          <span class="date">January 20th</span>
+        </div>
+        <ng-container *ngIf="isAuthenticated$ | async">
+          <ng-container *ngIf="isAuthorized$ | async; else notAuthorized">
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onEditArticle()"
+            >
+              <i class="ion-edit"></i>
+              &nbsp; Edit article
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="onDeleteArticle()"
+            >
+              <i class="ion-trash-a"></i>
+              &nbsp; Delete article
+            </button>
+          </ng-container>
+          <ng-template #notAuthorized>
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onMayBeFollow()"
+            >
+              <i class="ion-plus-round"></i>
+              &nbsp;
+              {{ article?.author?.following ? "Unfollow" : "Follow" }}
+              {{ article?.author?.username }}
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-sm btn-outline-primary"
+              (click)="onMayBeFavorite()"
+            >
+              <i class="ion-heart"></i>
+              &nbsp; Favorite Post
+              <span class="counter">({{ article?.favoritesCount }})</span>
+            </button>
+          </ng-template>
+        </ng-container>
+      </div>
     </div>
+  </div>
+  <div class="container page">
+    <div class="row article-content">
+      <div class="col-md-12">
+        <div>{{ article?.body }}</div>
+
+        <ul class="tag-list">
+          <li
+            *ngFor="let tag of article?.tagList"
+            class="tag-default tag-pill tag-outline"
+          >
+            {{ tag }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr />
   </div>
 </div>
