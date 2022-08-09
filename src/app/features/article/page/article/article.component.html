@@ -80,6 +80,33 @@
           <a [routerLink]="['/register']">sign up</a>
           to add comments on this article.
         </div>
+
+        <form
+          *ngIf="isAuthenticated$ | async"
+          [formGroup]="commentForm"
+          class="card comment-form"
+          (ngSubmit)="addComment()"
+        >
+          <div class="card-block">
+            <textarea
+              formControlName="comment"
+              class="form-control"
+              placeholder="Write a comment..."
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="card-footer">
+            <img [src]="" class="comment-author-img" />
+            <button
+              class="btn btn-sm btn-primary"
+              type="submit"
+              [disabled]="!commentForm.valid"
+            >
+              Post Comment
+            </button>
+          </div>
+        </form>
+
         <div *ngFor="let comment of comments" class="card">
           <div class="card-block">
             <p class="card-text">

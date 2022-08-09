@@ -7,6 +7,15 @@ export interface Comment {
   author: Profile;
 }
 
+export interface CommentRequest {
+  comment: {
+    body: string;
+  };
+}
+
 export interface CommentResponse {
+  comment: Comment;
+}
+export interface CommentsResponse {
   comments: Comment[];
 }

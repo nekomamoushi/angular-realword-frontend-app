@@ -1,5 +1,11 @@
 import { isIdentifier } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { delay, iif, map, Observable, switchMap, tap } from 'rxjs';
 import { Article } from 'src/app/core/models/article';
@@ -17,13 +23,18 @@ import { AuthService } from 'src/app/features/auth/auth.service';
 })
 export class ArticleComponent implements OnInit {
   article: Article | null = null;
-  comments: Comment[] | null = null;
+  comments: Comment[] = [];
   isAuthenticated$ = this.authService.isLoggedIn$;
   isAuthorized$!: Observable<boolean>;
+
+  commentForm = this.fb.group({
+    comment: ['', [Validators.required]],
+  });
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private fb: NonNullableFormBuilder,
     private authService: AuthService,
     private articleService: ArticleService,
     private profileService: ProfileService,
@@ -54,13 +65,39 @@ export class ArticleComponent implements OnInit {
       });
   }
 
+  addComment() {
+    if (!this.article) {
+      return;
+    }
+
+    const slug = this.article.slug;
+    const comment = this.commentForm.get('comment')?.value as string;
+
+    this.commentService.addComment(slug, comment).subscribe({
+      next: (comment: Comment) => {
+        this.comments.unshift(comment);
+        this.commentForm.get('comment')?.reset();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
   onEditArticle() {
-    this.router.navigate(['/editor', this.article?.slug]);
+    if (!this.article) {
+      return;
+    }
+    this.router.navigate(['/editor', this.article.slug]);
   }
 
   onDeleteArticle() {
+    if (!this.article) {
+      return;
+    }
+
     this.articleService
-      .deleteArticle(this.article?.slug as string)
+      .deleteArticle(this.article.slug)
       .pipe(delay(500))
       .subscribe({
         next: () => {
@@ -73,13 +110,14 @@ export class ArticleComponent implements OnInit {
   }
 
   onDeleteComment(id: number) {
-    this.commentService
-      .deleteComment(this.article?.slug as string, id)
-      .subscribe({
-        next: () => {
-          this.updateComments(id);
-        },
-      });
+    if (!this.article) {
+      return;
+    }
+    this.commentService.deleteComment(this.article.slug, id).subscribe({
+      next: () => {
+        this.updateComments(id);
+      },
+    });
   }
 
   onMayBeFollow() {
@@ -95,7 +133,6 @@ export class ArticleComponent implements OnInit {
 
     followOrNot$.subscribe({
       next: (profile: Profile) => {
-        console.log(profile);
         this.updateArticleProfile(profile);
       },
       error: (err) => {
@@ -117,7 +154,6 @@ export class ArticleComponent implements OnInit {
 
     favoriteOrNot$.subscribe({
       next: (article: Article) => {
-        console.log(article);
         this.updateArticle(article);
       },
       error: (err) => {
