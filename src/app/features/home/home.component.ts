@@ -13,8 +13,9 @@ import { AuthService } from '../auth/auth.service';
 export class HomeComponent implements OnInit {
   isLoggedIn$ = this.auth.isLoggedIn$;
 
-  allArticles: Article[] | null = null;
-  allTags: Tag[] | null = null;
+  allArticles: Article[] = [];
+  allTags: Tag[] = [];
+  mode: 'feed' | 'all' | '' = '';
 
   constructor(
     private auth: AuthService,
@@ -23,11 +24,26 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.article.getAllArticle().subscribe((articles) => {
-      this.allArticles = articles;
-    });
+    this.updateFeed('all');
     this.tag.getAllTags().subscribe((tags: Tag[]) => {
       this.allTags = tags;
+    });
+  }
+
+  updateFeed(feed: 'feed' | 'all') {
+    if (this.mode === feed) {
+      return;
+    }
+
+    this.mode = feed;
+    this.article.getAllArticle().subscribe((articles) => {
+      if (feed === 'all') {
+        this.allArticles = articles;
+      } else if (feed === 'feed') {
+        this.allArticles = articles.filter((article) => {
+          return article.author.following;
+        });
+      }
     });
   }
 }

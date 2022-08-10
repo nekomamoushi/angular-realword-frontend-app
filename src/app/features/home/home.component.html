@@ -6,10 +6,20 @@
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
             <li *ngIf="isLoggedIn$ | async" class="nav-item">
-              <a class="nav-link disabled" href="">Your Feed</a>
+              <a
+                class="nav-link"
+                [ngClass]="{ active: mode === 'feed' }"
+                (click)="updateFeed('feed')"
+                >Your Feed</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link active">Global Feed</a>
+              <a
+                class="nav-link"
+                [ngClass]="{ active: mode === 'all' }"
+                (click)="updateFeed('all')"
+                >Global Feed</a
+              >
             </li>
           </ul>
         </div>
