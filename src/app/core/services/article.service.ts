@@ -25,6 +25,30 @@ export class ArticleService {
       );
   }
 
+  getMyArticles(username: string): Observable<Article[]> {
+    return this.http
+      .get<ArticlesResponse>(
+        `${environment.apiUrl}/articles?author=${username}`
+      )
+      .pipe(
+        map((response) => {
+          return response.articles;
+        })
+      );
+  }
+
+  getFavArticles(username: string): Observable<Article[]> {
+    return this.http
+      .get<ArticlesResponse>(
+        `${environment.apiUrl}/articles?favorited=${username}`
+      )
+      .pipe(
+        map((response) => {
+          return response.articles;
+        })
+      );
+  }
+
   getArticle(slug: string): Observable<Article> {
     return this.http
       .get<ArticleResponse>(`${environment.apiUrl}/articles/${slug}`)
