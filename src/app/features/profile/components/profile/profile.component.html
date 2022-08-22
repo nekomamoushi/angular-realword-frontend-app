@@ -68,7 +68,14 @@
                 >
                 <span class="date">{{ article.updatedAt | date }}</span>
               </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
+              <button
+                class="btn btn-outline-primary btn-sm pull-xs-right"
+                [ngClass]="{
+                  'btn-outline-primary': !article.favorited,
+                  'btn-primary': article.favorited
+                }"
+                (click)="toggleFavorite(article)"
+              >
                 <i class="ion-heart"></i> {{ article.favoritesCount }}
               </button>
             </div>

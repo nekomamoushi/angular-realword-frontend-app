@@ -55,4 +55,16 @@ export class ProfileComponent implements OnInit {
       this.allArticles = articles;
     });
   }
+
+  toggleFavorite(article: Article) {
+    const isFavorited = article.favorited;
+    let favOrNot$ = this.article.favoriteArticle(article.slug);
+    if (isFavorited) {
+      favOrNot$ = this.article.unfavoriteArticle(article.slug);
+    }
+
+    favOrNot$.subscribe((_article) => {
+      article.favorited = _article.favorited;
+    });
+  }
 }

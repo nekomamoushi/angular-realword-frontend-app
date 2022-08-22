@@ -23,37 +23,47 @@
             </li>
           </ul>
         </div>
-        <div *ngFor="let article of allArticles" class="article-preview">
-          <div class="article-meta">
-            <a [routerLink]="['/profile', article.author.username]"
-              ><img [src]="article.author.image"
-            /></a>
-            <div class="info">
-              <a
-                [routerLink]="['/profile', article.author.username]"
-                class="author"
-                >{{ article.author.username }}</a
+        <p *ngIf="allArticles.length === 0">No articles are here... yet.</p>
+        <ng-container *ngIf="allArticles.length > 0">
+          <div *ngFor="let article of allArticles" class="article-preview">
+            <div class="article-meta">
+              <a [routerLink]="['/profile', article.author.username]"
+                ><img [src]="article.author.image"
+              /></a>
+              <div class="info">
+                <a
+                  [routerLink]="['/profile', article.author.username]"
+                  class="author"
+                  >{{ article.author.username }}</a
+                >
+                <span class="date">{{ article.updatedAt | date }}</span>
+              </div>
+              <button
+                class="btn btn-outline-primary btn-sm pull-xs-right"
+                [ngClass]="{
+                  'btn-outline-primary': !article.favorited,
+                  'btn-primary': article.favorited
+                }"
+                (click)="toggleFavorite(article)"
               >
-              <span class="date">{{ article.updatedAt | date }}</span>
+                <i class="ion-heart"></i> {{ article.favoritesCount }}
+              </button>
             </div>
-            <button class="btn btn-outline-primary btn-sm pull-xs-right">
-              <i class="ion-heart"></i> {{ article.favoritesCount }}
-            </button>
+            <a [routerLink]="['/article', article.slug]" class="preview-link">
+              <h1>{{ article.title }}</h1>
+              <p>{{ article.description }}</p>
+              <span>Read more...</span>
+              <ul class="tag-list">
+                <li
+                  class="tag-default tag-pill tag-outline"
+                  *ngFor="let tag of article.tagList"
+                >
+                  {{ tag }}
+                </li>
+              </ul>
+            </a>
           </div>
-          <a [routerLink]="['/article', article.slug]" class="preview-link">
-            <h1>{{ article.title }}</h1>
-            <p>{{ article.description }}</p>
-            <span>Read more...</span>
-            <ul class="tag-list">
-              <li
-                class="tag-default tag-pill tag-outline"
-                *ngFor="let tag of article.tagList"
-              >
-                {{ tag }}
-              </li>
-            </ul>
-          </a>
-        </div>
+        </ng-container>
       </div>
       <div class="col-md-3">
         <div class="sidebar">
